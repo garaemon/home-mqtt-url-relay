@@ -66,7 +66,7 @@ def build_python_code(hostname, target_directory):
 
 
 def copy_environmental_variables(hostname, target_directory):
-    envs = ['LOGGLY_TOKEN', 'CLOUDMQTT_URL']
+    envs = ['LOGGLY_TOKEN', 'CLOUDMQTT_URL', 'IFTTT_KEY']
     content = ';'.join(['export %s=%s' % (env, os.environ[env]) for env in envs])
     commands = ['cd %s' % target_directory, 'echo "%s" > setup.sh' % content]
     subprocess.check_call(['ssh', hostname, concatenate_shell_commands(commands)])

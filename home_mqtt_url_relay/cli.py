@@ -4,6 +4,7 @@ import os
 import json
 from urllib.error import URLError
 from urllib.request import urlopen
+from urllib.parse import urlparse
 
 import fire
 import paho.mqtt.client as mqtt
@@ -11,6 +12,8 @@ import paho.mqtt.client as mqtt
 PROJECT_DIR = os.path.join(os.path.dirname(__file__), '..')
 
 from .mqtt_base import MQTTBase
+from .ifttt import run_ifttt_webhook
+
 
 class CliApp(object):
     'Application class for cli usage'
@@ -25,9 +28,11 @@ class CliApp(object):
         self.mqtt_client.run_forever()
 
     def any_callback(self, client, userdata, message):
-        print(message.payload) # byte array of url
+
         url = message.payload.decode('utf-8')
-        print('Opening {}'.format(url))
+        p = urlparse(url)
+        url_without_protocol = '{}{}'.format(p.netloc, p.path)
+        run_ifttt_webhook('Received message on {} and call {}'.format(message.topic, url_without_protocol))
         try:
             urlopen(url)
         except URLError as e:
