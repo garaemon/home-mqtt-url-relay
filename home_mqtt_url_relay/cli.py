@@ -20,6 +20,7 @@ class CliApp(object):
 
     def serve(self, port=8880, database_directory=os.path.join(PROJECT_DIR, 'db')):
         'Run server'
+        run_ifttt_webhook('Run server to convert mqtt->url')
         self.mqtt_client = MQTTBase()
         self.mqtt_client.connect_mqtt()
         self.mqtt_client.mqtt_client.on_message = self.any_callback
